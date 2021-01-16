@@ -1,0 +1,84 @@
+#this is my first game made in python
+input('Card war game')
+
+#card colors and figures are in order from "strong" to "weak"
+colors = ['Heart','Spade','Diamond','Club']
+figures = ['Ace','King','Queen','Jack','10','9']
+
+allCards = [] #cards
+
+for color in colors:
+    for figure in figures:
+        allCards.append(figure+' '+color)
+
+#card shuffling
+from random import shuffle
+shuffle(allCards)
+
+
+#spread cards for 2 players
+player1 = []
+player2 = []
+for a in range(0,len(allCards),2):
+    player1.append(allCards[a])
+    player2.append(allCards[a+1])
+
+
+#game starts here
+round=1
+#lists of players cards on the "table"
+tablePlayer1 = []
+tablePlayer2 = []
+#game will end if one of the players will run out of the cards
+while len(player1)>0 and len(player2)>0:
+    input('Round %d'%round)
+    #every 12 rounds shuffle player decks
+    if round%12==0:
+        shuffle(player1)
+        shuffle(player2)
+        input('Both players are shuffling cards')
+    input('Player 1 has %d cards in hand\nPlayer 2 has %d cards in hand'%(len(player1),len(player2)))
+    input('Put cards on table')
+    tablePlayer1.append(player1.pop(0))
+    tablePlayer2.append(player2.pop(0))
+    input('player 1: %s'%tablePlayer1[len(tablePlayer1)-1])
+    input('player 2: %s'%tablePlayer2[len(tablePlayer2)-1])
+    input('Player 1 has %d cards on table\nPlayer 2 has %d cards on table' % (len(tablePlayer1),len(tablePlayer2)))
+    #takes last card from table for each player and inputs "figure" to variable
+    figureP1 = tablePlayer1[len(tablePlayer1)-1].split(' ')[0]
+    figureP2 = tablePlayer2[len(tablePlayer2)-1].split(' ')[0]
+    input('%s vs %s'%(figureP1,figureP2))
+
+    #now game checks which card is stronger, eventualy starts "war"
+    #in case of war loop starts over again and players puts new cards on the table
+    if figureP1==figureP2:
+        input('WAR!!!')
+        if len(player1)==0.or len(player2)==0:
+            input('Game ends, one of the players is run out of the cards')
+            break
+        else:
+            continue
+    elif figures.index(figureP1)<figures.index(figureP2):
+        player1.extend(tablePlayer1+tablePlayer2)
+        input('Player 1 take all cards from table')
+    else:
+        player2.extend(tablePlayer1+tablePlayer2)
+        input('Player 2 take all cards from table')
+
+    #after one of players takes all cards from table, clear tables
+    tablePlayer1.clear()
+    tablePlayer2.clear()
+    input('End of round %s' % (round))
+    round+=1
+    #games ends after 1000 rounds
+    if round > 1000:
+        input('End of game')
+        break
+
+#check who is the winner
+if len(player1)>len(player2):
+    print('Winner is player 1, he colected %d cards'%(len(player1)))
+    print('game took %d rounds'%(round))
+else:
+    print('Winner is player 2, he colected %d cards'%(len(player2)))
+    print('game took %d rounds'%(round))
