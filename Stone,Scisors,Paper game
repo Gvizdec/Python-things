@@ -1,0 +1,56 @@
+from getpass import getpass
+from sys import exc_info
+
+#player scores
+player1score=0
+player2score=0
+
+#game loop
+while True:
+    try:
+        #ask players for input
+        print('type paper,stone or scisors and press enter to end game')
+        player1= getpass(prompt='player one: stone, paper, scisors?').lower()
+        player2= getpass(prompt='player two: stone, paper, scisors?').lower()
+        #conditions to brake loop before game end
+        if player1=='' or player2 =='':
+            break
+        #check if players typed it properly, if not ask them again
+        if player1 not in ['stone','paper','scisors']:
+            print('player one wrong input, try again!')
+            continue
+        elif player2 not in ['stone','paper','scisors']:
+            print('player two wrong input, try again!')
+            continue
+    except:
+        print('something went wrong\n',exc_info()[1])
+
+    #game rlues, and score meter for players
+    if player1==player2:
+        print('tie')
+    elif player1=='stone'and player2=='paper':
+        print('%s vs %s, %s win'%(player1,player2,player2))
+        player2score+=1
+    elif player1=='paper' and player2=='scisors':
+        print('%s vs %s, %s win'%(player1,player2,player2))
+        player2score += 1
+    elif player1=='scisors'and player2=='stone':
+        print('%s vs %s, %s win'%(player1,player2,player2))
+        player2score += 1
+    else:
+        print('%s vs %s, %s win'%(player1,player2,player1))
+        player1score += 1
+    #game ends when one of players scores 3 first
+    if player1score>2 or player2score>2:
+        break
+
+#who is the champion?
+if player1score>player2score:
+    print('player one win')
+elif player1score<player2score:
+    print('player two win')
+elif player1score==player2score:
+    print('Tie')
+else:
+    print('no results')
+
