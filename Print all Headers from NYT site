@@ -1,0 +1,18 @@
+from requests import get
+url = 'https://www.nytimes.com/'
+r = get(url)
+r_html = r.text
+
+from bs4 import BeautifulSoup
+
+soup = BeautifulSoup(r_html,'html.parser')
+
+i=1
+for a in soup.find_all('h2'):
+    if 'e1voiwgp0' in str(a) and a.string!=None:
+        print(i,a.string)
+        i+=1
+for a in soup.find_all('h3'):
+    if 'e1sjycav0' in str(a) and a.string!=None:
+        print(i,a.string)
+        i+=1
