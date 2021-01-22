@@ -1,0 +1,167 @@
+from math import pow
+from os import system
+from sys import exc_info
+
+def TicTacToeCheck(game,gameSize):
+    #checking winners of tic tac toe game
+    #check for same singns in rows
+    for a in range(0, len(game), gameSize):
+        i = 0
+        for b in range(gameSize):
+            if game[a + b] == 0:
+                break
+            elif game[a] == game[a + b]:
+                i += 1
+                if i == gameSize:
+                    return(game[a])
+                continue
+            else:
+                break
+
+    #check for same signs in colums
+    for a in range(gameSize):
+        i = 0
+        for b in range(gameSize):
+            if game[a] == 0:
+                break
+            if game[a] == game[a + b * gameSize]:
+                i += 1
+                if i == gameSize:
+                    return(game[a])
+                continue
+            else:
+                break
+
+    #check for same signs in diagonals lines
+    dG = game.copy()
+    for a in range(0, gameSize + 1, gameSize):
+        i = 0
+        for b in range(0, int(pow(gameSize, 2)), gameSize + 1):
+            if dG[0] == 0:
+                break
+            if dG[0] == dG[b]:
+                i += 1
+                if i == gameSize:
+                    return(dG[0])
+                continue
+            else:
+                break
+        # reversing list to check 2nd diagonal
+        tmp = []
+        for c in range(0, len(dG), gameSize):
+            tmp.extend(dG[len(dG) - c - gameSize:len(dG) - c])
+        dG = tmp
+    #if there are empty fields in game board keep game runing
+    if 0 in game:
+        return False
+    else:
+        return ('tie')
+
+def GameSize():
+    #building game board, ask user for game size
+    #returns game table
+    while True:
+        try:
+            gameSize=int(input('What size game would you like to play?: '))
+            if gameSize>=2:
+                return gameSize
+            else:
+                print('Input only natural integers biger than 1')
+        except ValueError as error:
+            print('input only integers\n%s'%error)
+
+
+def PrintGameBoard(game,gameSize):
+    # print game status as square board
+    i = 0
+    for a in range(gameSize):
+        print('  -----  ' * gameSize)
+        for b in range(gameSize):
+            i += 1
+            if game[i - 1] == 0:
+                if i // 10 == 0:
+                    b = ' ' + str(i) + ' '
+                else:
+                    b = str(i) + ' '
+            elif game[i - 1] == 1:
+                b = ' x '
+            else:
+                b = ' o '
+            print('', b, '', sep=' | ', end='')
+        print(end='\n')
+    print('  -----  ' * gameSize)
+
+def PickSpotFromTable(game,gameSize):
+    # ask players to pick spot on the table
+    while True:
+        try:
+            sign = int(input('Player %d pick number from table above or type 0 endgame ' % player))
+            if game[sign - 1] == 0 and sign in range(1, int(pow(gameSize, 2)) + 1):
+                return sign
+            elif sign == 0:
+                break
+            else:
+                input('place %d is taken by player %d' % (sign, game[sign - 1]))
+        except ValueError as error:
+            print('pick only avaiable numbers from table above \n%s' % error)
+
+
+#main game loop
+while True:
+    #ask for game board size
+    gameSize = GameSize()
+
+    #generate game board according to the gameSize
+    game = []
+    for a in range(int(pow(gameSize,2))):
+        game.append(0)
+
+    #select first player
+    player=1
+
+    #actual game loop
+    while True:
+        if sum(game)==0:
+            print('Tic Tac Toe game')
+        elif TicTacToeCheck(game,gameSize)==False:
+            print('next turn')
+        elif TicTacToeCheck(game,gameSize)==1 or TicTacToeCheck(game,gameSize)==2:
+            print('Player %d wins'%TicTacToeCheck(game,gameSize))
+            break
+        elif TicTacToeCheck(game,gameSize)=='tie':
+            print('tie')
+            break
+
+        PrintGameBoard(game, gameSize)
+
+        #ask user for spot from game table
+        sign=PickSpotFromTable(game,gameSize)
+
+        #if user choose sign 0 games end
+        if sign==0:
+            break
+
+        #clear window after every tour
+        system('cls')
+
+        #input user choice in game board
+        game[sign-1]=player
+
+        #pick next player
+        if player == 1:
+            player=2
+        else:
+            player = 1
+
+    #ask user if he want play again
+    while True:
+        try:
+            again = input('Do you wana play again? y/n ')
+        except:
+            input('Something went wrong try again\n%s'%exc_info()[0])
+        else:
+            break
+    if again == 'y':
+        continue
+    else:
+        break
