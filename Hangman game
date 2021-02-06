@@ -1,0 +1,120 @@
+from random import randint
+import os
+
+
+def Hangman(i):
+    if i == 0:
+        return
+    elif i == 1:
+        return '''
+    | |
+ [ .][. ]
+  \\[][]/
+   [][]'''
+    elif i == 2:
+        return '''
+        ( o o )
+           | |
+        [ .][. ]
+         \\[][]/
+          [][]'''
+
+    elif i == 3:
+        return '''
+          ( o o )
+            | |
+      / /[ .][. ]
+      | | \\[][]/ 
+       \\ \\ [][]
+        $$$'''
+    elif i == 4:
+        return '''
+          ( o o )
+            | |
+      / /[ .][. ]\\ \\
+      | | \\[][]/  | |
+       \\ \\ [][]  / /
+        $$$     $$$'''
+    elif i == 5:
+        return '''
+          ( o o )
+            | |
+      / /[ .][. ]\\ \\
+      | | \\[][]/  | |
+       \\ \\ [][]  / /
+        $$$||   $$$
+           ||
+           ||
+         @@@@'''
+    elif i == 6:
+        return '''
+        ##################
+             |           #
+             |           #
+          ( o o )        #
+            | |          #
+      / /[ .][. ]\\ \\     #
+      | | \\[][]/  | |    #
+       \\ \\ [][]  / /     #
+        $$$| || | $$$    #
+           | || |        #
+           | || |        #
+          @@@@ @@@@      #
+                         #
+        man hanging      #
+    ========================'''
+
+
+
+while True:
+    sowpods = 'sowpods.txt'
+
+    i=0
+    with open(sowpods,'r') as file:
+        words=file.read().split('\n')
+        select = randint(1,len(words))
+        for w in words:
+            i+=1
+            if i==select:
+                word = w
+                break
+    print('welcome to hangman game')
+    oldLetters=[]
+    password = '-'*len(word)
+    i=0
+    while True:
+
+        letter = input('Guess letter: ')
+        if letter in oldLetters:
+            print('You already tried that letter!')
+            continue
+        else:
+            oldLetters.append(letter)
+
+        if letter.lower() in word.lower():
+            for a in range(len(word)):
+                if letter.lower() == word[a].lower():
+                    password = password[:a]+letter.upper()+password[a+1:]
+
+        else:
+            i+=1
+            if i>=6:
+                print(Hangman(6))
+                break
+            print('wrong\n',Hangman(i))
+
+        print(password)
+    while True:
+        stop = input('play again? y/n ')
+        if stop == 'y':
+            break
+        else:
+            exit()
+    if stop=='y':
+        # os.system('cls')
+        continue
+    else:
+        break
+
+
+
